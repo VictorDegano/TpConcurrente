@@ -1,17 +1,17 @@
-import java.util.ArrayList;
-import java.util.List;
-
 public class Buffer
 {
-    private List<Double> buffer = new ArrayList<Double>();
+    private WorkTP[] buffer;
     private int start = 0;
     private int end = 0;
     private int size;
 
     public Buffer(int size)
-    {   this.size = size; }
+    {
+        this.size = size;
+        buffer = new WorkTP[size + 1];
+    }
 
-    public synchronized void push(Double value)
+    public synchronized void push(WorkTP value)
     {
         while(this.isFull())
         {
@@ -20,12 +20,12 @@ public class Buffer
             catch(InterruptedException e)
             {}
         }
-        this.buffer.set(this.start, value);
+        this.buffer[this.start] = value;
         this.start = this.next(this.start);
         notifyAll();
     }
 
-    public synchronized double pop()
+    public synchronized WorkTP pop()
     {
         while(this.isEmpty())
         {
@@ -34,7 +34,7 @@ public class Buffer
             catch(InterruptedException e)
             {}
         }
-        Double result= this.buffer.get(this.end);
+        WorkTP result= this.buffer[this.end];
         this.end = this.next(this.end);
         notifyAll();
         return result;

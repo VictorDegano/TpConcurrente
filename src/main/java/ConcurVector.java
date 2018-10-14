@@ -9,7 +9,7 @@ public class ConcurVector extends SeqVector{
     /** Pone el valor d en todas las posiciones del vector.
      * @param d, el valor a ser asignado. */
     public void set(double d) {
-        this.pool.set(this.elements, d)
+        this.pool.fillPool(this.elements);
     }
 
 
