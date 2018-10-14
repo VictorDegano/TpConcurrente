@@ -4,48 +4,48 @@ import java.util.List;
 public class Buffer
 {
     private List<Double> buffer = new ArrayList<Double>();
-    private int inicio          = 0;
-    private int fin             = 0;
-    private int tamanio;
+    private int start = 0;
+    private int end = 0;
+    private int size;
 
-    public Buffer(int tamanio)
-    {   this.tamanio = tamanio; }
+    public Buffer(int size)
+    {   this.size = size; }
 
-    public synchronized void push(Double valor)
+    public synchronized void push(Double value)
     {
-        while(this.estaLleno())
+        while(this.isFull())
         {
             try
             {   wait(); }
             catch(InterruptedException e)
             {}
         }
-        this.buffer.set(this.inicio, valor);
-        this.inicio = this.siguiente(this.inicio);
+        this.buffer.set(this.start, value);
+        this.start = this.next(this.start);
         notifyAll();
     }
 
     public synchronized double pop()
     {
-        while(this.estaVacio())
+        while(this.isEmpty())
         {
             try
             {   wait(); }
             catch(InterruptedException e)
             {}
         }
-        Double resultado= this.buffer.get(this.fin);
-        this.fin        = this.siguiente(this.fin);
+        Double result= this.buffer.get(this.end);
+        this.end = this.next(this.end);
         notifyAll();
-        return resultado;
+        return result;
     }
 
-    private boolean estaVacio()
-    {   return this.inicio == this.fin; }
+    public synchronized boolean isEmpty()
+    {   return this.start == this.end; }
 
-    private boolean estaLleno()
-    {   return this.siguiente(this.inicio) == this.fin;   }
+    private boolean isFull()
+    {   return this.next(this.start) == this.end;   }
 
-    private int siguiente(int i)
-    {   return (i+1)%(this.tamanio+1);  }
+    private int next(int i)
+    {   return (i+1)%(this.size +1);  }
 }
