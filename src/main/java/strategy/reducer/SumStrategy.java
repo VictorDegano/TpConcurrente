@@ -7,8 +7,13 @@ import strategy.JobTypeStrategy;
 public class SumStrategy implements JobTypeStrategy
 {
     @Override
-    public Object executeJob(WorkTP aWorkTP) {
-        return null;
+    public void executeJob(WorkTP aWorkTP)
+    {
+        double result = 0;
+        for (int i = 0; i < aWorkTP.workSize(); ++i)
+            result += aWorkTP.getVector()[i];
+
+        aWorkTP.setResultValue(result);
     }
 
     @Override

@@ -12,9 +12,8 @@ public abstract class AbstractMapReducSelector
     public AbstractMapReducSelector(List<JobTypeStrategy> mapStrategies)
     {   this.mapStrategies = mapStrategies; }
 
-    // TODO: 17/10/2018 Resolver que clase devuelve
-    public Object resolveJobTypeAndExecute(WorkTP aWorkTP)
-    {   return this.selectStrategy(aWorkTP.getWorkType()).executeJob(aWorkTP);  }
+    public void resolveJobTypeAndExecute(WorkTP aWorkTP)
+    {   this.selectStrategy(aWorkTP.getWorkType()).executeJob(aWorkTP);  }
 
     private JobTypeStrategy selectStrategy(WorkType workType)
     {   return this.mapStrategies.stream()

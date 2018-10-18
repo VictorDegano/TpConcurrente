@@ -7,8 +7,8 @@ import strategy.JobTypeStrategy;
 public class MaxStrategy implements JobTypeStrategy
 {
     @Override
-    public Object executeJob(WorkTP aWorkTP) {
-        return null;
+    public void executeJob(WorkTP aWorkTP) {
+
     }
 
     @Override

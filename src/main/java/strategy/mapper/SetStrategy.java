@@ -7,8 +7,17 @@ import strategy.JobTypeStrategy;
 public class SetStrategy implements JobTypeStrategy
 {
     @Override
-    public Object executeJob(WorkTP aWorkTP) {
-        return null;
+    public void executeJob(WorkTP aWorkTP)
+    {
+        double[] elements   = aWorkTP.getVector();
+        double d            = aWorkTP.getValue();
+
+        for (int i = 0; i < aWorkTP.workSize(); ++i)
+        {
+            elements[i] = d;
+            System.out.print("Set " + d + "en index " + i);
+        }
+        aWorkTP.setResultVector(elements);
     }
 
     @Override

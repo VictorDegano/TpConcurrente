@@ -1,13 +1,13 @@
-package concurrTP;
+package concurrTP.buffer;
 
 import workTP.WorkTP;
 
 public class Buffer
 {
-    private WorkTP[] buffer;
-    private int start = 0;
-    private int end = 0;
-    private int size;
+    protected WorkTP[] buffer;
+    protected int start   = 0;
+    protected int end     = 0;
+    protected int size;
 
     public Buffer(int size)
     {
@@ -47,9 +47,9 @@ public class Buffer
     public synchronized boolean isEmpty()
     {   return this.start == this.end; }
 
-    private boolean isFull()
+    protected boolean isFull()
     {   return this.next(this.start) == this.end;   }
 
-    private int next(int i)
+    protected int next(int i)
     {   return (i+1)%(this.size +1);  }
 }

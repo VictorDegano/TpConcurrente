@@ -19,13 +19,12 @@ public class MapReducStrategy
         this.reducStrategy  = new ReduceStrategySelector();
     }
 
-    // TODO: 17/10/2018 falta resolver la clase que devuelve al terminar la operacion
-    public Object resolveJobTypeAndExecute(WorkTP aWorkTP)
+    public void resolveJobTypeAndExecute(WorkTP aWorkTP)
     {
         if(this.isAReducerType(aWorkTP.getWorkType()))
-        {   return this.reducStrategy.resolveJobTypeAndExecute(aWorkTP);    }
+        {   this.reducStrategy.resolveJobTypeAndExecute(aWorkTP);    }
         else
-        {   return this.mapStrategy.resolveJobTypeAndExecute(aWorkTP);  }
+        {   this.mapStrategy.resolveJobTypeAndExecute(aWorkTP); }
     }
 
     private boolean isAReducerType(WorkType workType)

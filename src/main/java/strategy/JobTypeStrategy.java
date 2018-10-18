@@ -5,7 +5,7 @@ import workTP.WorkType;
 
 public interface JobTypeStrategy
 {
-    Object executeJob(WorkTP aWorkTP);
+    void executeJob(WorkTP aWorkTP);
 
     Boolean isMyJob(WorkType aWorkType);
 }

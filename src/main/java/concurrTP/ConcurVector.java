@@ -6,6 +6,7 @@ public class ConcurVector extends SeqVector{
     public ConcurVector(int size, int threads, int load) {
         super(size);
         this.pool = new ThreadPoolTP(threads, load);
+        this.pool.fillPool(this.elements);  //Se generan los threads y se quedan esperando
     }
 
 
@@ -14,7 +15,10 @@ public class ConcurVector extends SeqVector{
     /** Pone el valor d en todas las posiciones del vector.
      * @param d, el valor a ser asignado. */
     public void set(double d) {
-        this.pool.fillPool(this.elements);
+        //Se le dice al threadpool que cargue el trabajo
+        //se espera el resultado
+        //se lo obtiene
+        //se lo guarda
     }
 
 
@@ -69,6 +73,12 @@ public class ConcurVector extends SeqVector{
 
     /** Obtiene la suma de todos los valores del vector. */
     public double sum() {
+        //Se le dice al threadpool que cargue el trabajo
+        //se espera el resultado
+        //se lo obtiene
+        //Si el resultado es otro vector se lo vuelve a trabajar
+        //Si es un solo valor se lo retorna
+
         double result = 0;
         for (int i = 0; i < dimension(); ++i)
             result += get(i);
