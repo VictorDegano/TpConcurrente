@@ -1,15 +1,9 @@
 package workTP;
 
-import concurrTP.Worker;
-
 public class WorkTP {
 
-    public WorkTP(Worker w){ worker = w; }
-    public Worker worker;
-
-    /*[----]*/
     private WorkType workType;
-    private double[] vector;
+    private double[] vector;    // vector inicial
 
     private double value;
 
@@ -20,6 +14,8 @@ public class WorkTP {
     private double[] resultVector;
 
     private double resultValue;
+
+    public WorkTP(){}
 
     public WorkTP(WorkType aWorkType, double[] aVector, int position)
     {

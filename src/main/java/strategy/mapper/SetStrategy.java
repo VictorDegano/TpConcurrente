@@ -15,7 +15,7 @@ public class SetStrategy implements JobTypeStrategy
         for (int i = 0; i < aWorkTP.workSize(); ++i)
         {
             elements[i] = d;
-            System.out.print("Set " + d + "en index " + i);
+            System.out.print("Set " + d + "en index " + i + "del WorkTP \n");
         }
         aWorkTP.setResultVector(elements);
     }

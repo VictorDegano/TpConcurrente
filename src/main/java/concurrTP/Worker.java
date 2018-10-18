@@ -1,18 +1,21 @@
 package concurrTP;
 
 import concurrTP.buffer.Buffer;
+import concurrTP.buffer.ResultBufferType;
 import concurrTP.monitor.FinishedJobMonitor;
 import strategy.MapReducStrategy;
 import workTP.WorkTP;
 
+import java.util.List;
+
 public class Worker extends Thread
 {
     private Buffer buffer;                          //Monitor para conseguir trabajo
-    private Buffer resultBuffer;                    //Monitor para dejar el trabajo
+    private ResultBufferType resultBuffer;                    //Monitor para dejar el trabajo
     private FinishedJobMonitor finishedJobMonitor;  //Monitor para avisar que se termino el trabajo
     private MapReducStrategy mapReducStrategy;
 
-    public Worker(Buffer buffer, Buffer resultBuffer, FinishedJobMonitor finishedJobMonitor)
+    public Worker(Buffer buffer, ResultBufferType resultBuffer, FinishedJobMonitor finishedJobMonitor)
     {
         this.buffer             = buffer;
         this.resultBuffer       = resultBuffer;
@@ -27,7 +30,7 @@ public class Worker extends Thread
         {
             WorkTP workToDo = buffer.pop();         //Toma Trabajo
             this.mapReducStrategy.resolveJobTypeAndExecute(workToDo);  //Discrimina que tipo de trabajo es y lo resuelve
-            this.resultBuffer.push(workToDo);       //Guarda el trabajo resuelto
+            this.resultBuffer.add(workToDo);       //Guarda el trabajo resuelto
             this.finishedJobMonitor.workCompleted();//Avisa que termino
         }
     }

@@ -1,12 +1,25 @@
 package concurrTP;
 
+import concurrTP.buffer.Buffer;
+import concurrTP.buffer.ResultBufferType;
+import concurrTP.monitor.FinishedJobMonitor;
+import workTP.WorkTP;
+import workTP.WorkType;
+
+import java.util.Arrays;
+
 public class ConcurVector extends SeqVector{
     private final ThreadPoolTP pool;
+    private Buffer buffer;
+    private ResultBufferType resultBuffer;
+    private FinishedJobMonitor finishedJobMonitor;
 
     public ConcurVector(int size, int threads, int load) {
         super(size);
-        this.pool = new ThreadPoolTP(threads, load);
-        this.pool.fillPool(this.elements);  //Se generan los threads y se quedan esperando
+        this.pool         = new ThreadPoolTP(threads, load);
+        this.buffer       = new Buffer(elements.length);
+        this.resultBuffer = new ResultBufferType();
+        this.pool.fillPool(this.elements, buffer, resultBuffer);  //Se generan los threads y se quedan esperando
     }
 
 
@@ -14,11 +27,29 @@ public class ConcurVector extends SeqVector{
 
     /** Pone el valor d en todas las posiciones del vector.
      * @param d, el valor a ser asignado. */
-    public void set(double d) {
-        //Se le dice al threadpool que cargue el trabajo
-        //se espera el resultado
-        //se lo obtiene
-        //se lo guarda
+    public void set(double d)
+    {
+        // TODO: 18/10/2018 tener en cuenta la diferencia de carga
+        int caluloDeCarga   = this.elements.length / this.pool.getThreads();
+        for (int i = 0; i < this.elements.length ; i+=caluloDeCarga)
+        {
+            WorkTP work = new WorkTP();
+            work.setValue(d);
+            work.setVector(Arrays.copyOfRange(this.elements,i ,i+caluloDeCarga));
+            work.setWorkType(WorkType.SET);
+            work.setPosition(i);
+            this.buffer.push(work);
+        }
+
+        this.pool.jobFinished();
+
+        //Junta todo
+        for (WorkTP element: this.resultBuffer.getResults())
+        {
+            int elementPosition = element.getPosition();
+            for (int i = elementPosition; i < elementPosition+caluloDeCarga; i++)
+            {   this.elements[i] = element.getResultVector()[i-elementPosition];  }
+        }
     }
 
 
