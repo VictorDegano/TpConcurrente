@@ -1,3 +1,7 @@
+package concurrTP;
+
+import workTP.WorkTP;
+
 public class Buffer
 {
     private WorkTP[] buffer;

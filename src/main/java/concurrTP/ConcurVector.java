@@ -1,3 +1,5 @@
+package concurrTP;
+
 public class ConcurVector extends SeqVector{
     private final ThreadPoolTP pool;
 
@@ -5,6 +7,9 @@ public class ConcurVector extends SeqVector{
         super(size);
         this.pool = new ThreadPoolTP(threads, load);
     }
+
+
+/*Operaciones de Mapeo*/
 
     /** Pone el valor d en todas las posiciones del vector.
      * @param d, el valor a ser asignado. */
@@ -59,6 +64,8 @@ public class ConcurVector extends SeqVector{
             set(i, Math.abs(get(i)));
     }
 
+
+/*Operaciones de Reduccion*/
 
     /** Obtiene la suma de todos los valores del vector. */
     public double sum() {

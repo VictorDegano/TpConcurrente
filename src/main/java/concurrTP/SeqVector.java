@@ -1,4 +1,4 @@
-
+package concurrTP;
 
 /** La clase representa un vector de longitud fija de 
  * numeros de punto flotante. */
@@ -9,7 +9,7 @@ public class SeqVector {
 	protected double[] elements;
 	
 	
-	/** Constructor del SeqVector.
+	/** Constructor del concurrTP.SeqVector.
 	 * @param size, la longitud del vector.
 	 * @precondition size > 0. */
 	public SeqVector(int size) {
@@ -98,7 +98,6 @@ public class SeqVector {
 		for (int i = 0; i < dimension(); ++i)
 			set(i, Math.abs(get(i)));
 	}
-
 
 	/** Obtiene la suma de todos los valores del vector. */
 	public double sum() {

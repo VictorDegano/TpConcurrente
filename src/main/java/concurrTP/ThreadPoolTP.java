@@ -1,4 +1,4 @@
-import com.sun.corba.se.spi.orbutil.threadpool.Work;
+package concurrTP;
 
 import java.util.ArrayList;
 import java.util.List;
