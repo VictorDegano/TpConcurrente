@@ -7,7 +7,7 @@ public class MaxStrategy extends ReduceStrategy
 {
     @Override
     protected void doOperation(int index) {
-
+        result = Math.max(work.getVector()[index], result);
     }
 
     @Override
