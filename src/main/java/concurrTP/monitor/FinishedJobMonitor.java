@@ -6,6 +6,8 @@ public class FinishedJobMonitor
     private int inactiveWorkers = 0;
     private int activeWorkers;
 
+    public FinishedJobMonitor(){}
+
     public FinishedJobMonitor(int workers)
     {   this.activeWorkers= workers;    }
 
@@ -27,4 +29,6 @@ public class FinishedJobMonitor
         }
         this.inactiveWorkers= 0;
     }
+
+    public void setActiveWorkers(int activeWorkers) {   this.activeWorkers = activeWorkers; }
 }

@@ -2,23 +2,24 @@ package concurrTP;
 
 import concurrTP.buffer.Buffer;
 import concurrTP.buffer.ResultBufferType;
-import concurrTP.monitor.FinishedJobMonitor;
 import workTP.WorkTP;
 import workTP.WorkType;
-
 import java.util.Arrays;
+import java.util.List;
 
 public class ConcurVector extends SeqVector{
+
     private final ThreadPoolTP pool;
     private Buffer buffer;
     private ResultBufferType resultBuffer;
-    private FinishedJobMonitor finishedJobMonitor;
+    private int caluloDeCarga;
 
     public ConcurVector(int size, int threads, int load) {
         super(size);
-        this.pool         = new ThreadPoolTP(threads, load);
-        this.buffer       = new Buffer(elements.length);
-        this.resultBuffer = new ResultBufferType();
+        this.pool           = new ThreadPoolTP(threads, load);
+        this.buffer         = new Buffer(elements.length);
+        this.resultBuffer   = new ResultBufferType();
+        this.caluloDeCarga  = this.elements.length / threads;
         this.pool.fillPool(this.elements, buffer, resultBuffer);  //Se generan los threads y se quedan esperando
     }
 
@@ -103,18 +104,30 @@ public class ConcurVector extends SeqVector{
 /*Operaciones de Reduccion*/
 
     /** Obtiene la suma de todos los valores del vector. */
-    public double sum() {
-        //Se le dice al threadpool que cargue el trabajo
-        //se espera el resultado
-        //se lo obtiene
-        //Si el resultado es otro vector se lo vuelve a trabajar
-        //Si es un solo valor se lo retorna
+    public double sum()
+    {
+        // TODO: 18/10/2018 tener en cuenta la diferencia de carga
+        this.loadWork(this.caluloDeCarga, this.elements, WorkType.SUM);
+        this.pool.jobFinished();
 
-        double result = 0;
-        for (int i = 0; i < dimension(); ++i)
-            result += get(i);
-        return result;
+        List<WorkTP> partialResult = this.resultBuffer.getResults();
+
+        if (partialResult.size() != 1)
+        {
+            double[]    algo = new double[partialResult.size()];
+            this.pool.updatePool(algo, this.caluloDeCarga);
+            //llamada recursiva aca
+            for (int i = 0; i < partialResult.size() ; i++)
+            {   algo[i] = partialResult.get(i).getResultValue();}
+            this.loadWork(caluloDeCarga, algo, WorkType.SUM);
+            this.pool.jobFinished();
+            partialResult = this.resultBuffer.getResults();
+        }
+
+        return partialResult.get(0).getResultValue();
     }
+
+
 
 
     /** Obtiene el valor promedio en el vector. */
@@ -158,5 +171,15 @@ public class ConcurVector extends SeqVector{
     }
 
 
+
+    private void loadWork(int caluloDeCarga, double[] elements,WorkType aType) {
+        for (int i = 0; i < elements.length; i += caluloDeCarga) {
+            WorkTP work = new WorkTP();
+            work.setVector(Arrays.copyOfRange(elements, i, i + caluloDeCarga));
+            work.setWorkType(aType);
+            work.setPosition(i);
+            this.buffer.push(work);
+        }
+    }
 
 }

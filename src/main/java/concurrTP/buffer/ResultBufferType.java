@@ -14,5 +14,9 @@ public class ResultBufferType
 
 
     public List<WorkTP> getResults()
-    {   return this.results; }
+    {
+        List<WorkTP> result = new ArrayList<>(this.results);
+        this.results.clear();
+        return result;
+    }
 }
