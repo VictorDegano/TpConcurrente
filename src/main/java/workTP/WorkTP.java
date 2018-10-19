@@ -10,6 +10,7 @@ public class WorkTP {
     private double[] resultVector;
     private double resultValue;
     private double[] helperVector;
+    private double[] maskVector;
 
     public WorkTP(){}
 
@@ -43,4 +44,7 @@ public class WorkTP {
 
     public double[] getHelperVector() { return this.helperVector; }
     public void setHelperVector(double[] otherVector) { this.helperVector = otherVector;    }
+
+    public double[] getMaskVector() { return this.maskVector; }
+    public void setMaskVector(double[] maskVector) { this.maskVector = maskVector;  }
 }

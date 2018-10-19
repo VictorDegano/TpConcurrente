@@ -8,7 +8,17 @@ public class AssignMaskStrategy implements JobTypeStrategy
 {
     @Override
     public void executeJob(WorkTP aWorkTP) {
+        double[] elements       = aWorkTP.getVector();
+        double[] assignVector   = aWorkTP.getHelperVector();
+        double[] maskVector   = aWorkTP.getMaskVector();
+        int position = aWorkTP.getPosition();
 
+        for (int i = 0; i < aWorkTP.workSize(); ++i)
+        {
+            if (maskVector[position + i] > 0)
+                elements[i] = assignVector[position + i];
+        }
+        aWorkTP.setResultVector(elements);
     }
 
     @Override

@@ -56,9 +56,11 @@ public class ConcurVector extends SeqVector{
      * @param v, el vector del que se tomaran los valores nuevos.
      * @precondition dimension() == mask.dimension() && dimension() == v.dimension(). */
     public void assign(SeqVector mask, SeqVector v) {
-        for (int i = 0; i < dimension(); ++i)
-            if (mask.get(i) >= 0)
-                set(i, v.get(i));
+        this.loadWork(this.caluloDeCarga, elements, WorkType.ASSIGNMASK, v.elements, mask.elements);
+
+        this.pool.jobFinished();
+
+        this.joinResults();
     }
 
 
@@ -181,6 +183,17 @@ public class ConcurVector extends SeqVector{
             this.buffer.push(work);
         }
     }
+
+
+    private void loadWork(int caluloDeCarga, double[] elements, WorkType aType, double[] otherVector, double[] maskVector) {
+        for (int i = 0; i < elements.length; i += caluloDeCarga) {
+            WorkTP work = getBasicWork(caluloDeCarga, elements, aType, i);
+            work.setHelperVector(otherVector);
+            work.setMaskVector(maskVector);
+            this.buffer.push(work);
+        }
+    }
+
 
     private void joinResults() {
         for (WorkTP element: this.resultBuffer.getResults())
