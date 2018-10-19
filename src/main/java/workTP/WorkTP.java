@@ -6,14 +6,10 @@ public class WorkTP {
     private double[] vector;    // vector inicial
 
     private double value;
-
-    // TODO: 17/10/2018 Puede ponerse la posicion en la que se encuentra en el buffer para saber en que posicion guardarla en le caso de los mensajes de mapeo 
     private int position;
-
-    // TODO: 18/10/2018 Se puede poner que posea el resultado del trabajo.
     private double[] resultVector;
-
     private double resultValue;
+    private double[] helperVector;
 
     public WorkTP(){}
 
@@ -44,4 +40,7 @@ public class WorkTP {
 
     public double getResultValue() {    return resultValue; }
     public void setResultValue(double resultValue) {    this.resultValue = resultValue; }
+
+    public double[] getHelperVector() { return this.helperVector; }
+    public void setHelperVector(double[] otherVector) { this.helperVector = otherVector;    }
 }

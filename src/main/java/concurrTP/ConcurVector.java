@@ -30,27 +30,11 @@ public class ConcurVector extends SeqVector{
      * @param d, el valor a ser asignado. */
     public void set(double d)
     {
-        // TODO: 18/10/2018 tener en cuenta la diferencia de carga
-        int caluloDeCarga   = this.elements.length / this.pool.getThreads();
-        for (int i = 0; i < this.elements.length ; i+=caluloDeCarga)
-        {
-            WorkTP work = new WorkTP();
-            work.setValue(d);
-            work.setVector(Arrays.copyOfRange(this.elements,i ,i+caluloDeCarga));
-            work.setWorkType(WorkType.SET);
-            work.setPosition(i);
-            this.buffer.push(work);
-        }
+        this.loadWork(this.caluloDeCarga, elements, WorkType.SET, d);
 
         this.pool.jobFinished();
 
-        //Junta todo
-        for (WorkTP element: this.resultBuffer.getResults())
-        {
-            int elementPosition = element.getPosition();
-            for (int i = elementPosition; i < elementPosition+caluloDeCarga; i++)
-            {   this.elements[i] = element.getResultVector()[i-elementPosition];  }
-        }
+        this.joinResults();
     }
 
 
@@ -58,8 +42,11 @@ public class ConcurVector extends SeqVector{
      * @param v, el vector del que se tomaran los valores nuevos.
      * @precondition dimension() == v.dimension(). */
     public void assign(SeqVector v) {
-        for (int i = 0; i < dimension(); ++i)
-            set(i, v.get(i));
+        this.loadWork(this.caluloDeCarga, elements, WorkType.ASSIGN, v.elements);
+
+        this.pool.jobFinished();
+
+        this.joinResults();
     }
 
 
@@ -172,14 +159,43 @@ public class ConcurVector extends SeqVector{
 
 
 
-    private void loadWork(int caluloDeCarga, double[] elements,WorkType aType) {
+    private void loadWork(int caluloDeCarga, double[] elements, WorkType aType) {
         for (int i = 0; i < elements.length; i += caluloDeCarga) {
-            WorkTP work = new WorkTP();
-            work.setVector(Arrays.copyOfRange(elements, i, i + caluloDeCarga));
-            work.setWorkType(aType);
-            work.setPosition(i);
+            WorkTP work = getBasicWork(caluloDeCarga, elements, aType, i);
             this.buffer.push(work);
         }
     }
 
+    private void loadWork(int caluloDeCarga, double[] elements, WorkType aType, double value) {
+        for (int i = 0; i < elements.length; i += caluloDeCarga) {
+            WorkTP work = getBasicWork(caluloDeCarga, elements, aType, i);
+            work.setValue(value);
+            this.buffer.push(work);
+        }
+    }
+
+    private void loadWork(int caluloDeCarga, double[] elements, WorkType aType, double[] otherVector) {
+        for (int i = 0; i < elements.length; i += caluloDeCarga) {
+            WorkTP work = getBasicWork(caluloDeCarga, elements, aType, i);
+            work.setHelperVector(otherVector);
+            this.buffer.push(work);
+        }
+    }
+
+    private void joinResults() {
+        for (WorkTP element: this.resultBuffer.getResults())
+        {
+            int elementPosition = element.getPosition();
+            for (int i = elementPosition; i < elementPosition+caluloDeCarga; i++)
+            {   this.elements[i] = element.getResultVector()[i-elementPosition];  }
+        }
+    }
+
+    private WorkTP getBasicWork(int caluloDeCarga, double[] elements, WorkType aType, int position) {
+        WorkTP work = new WorkTP();
+        work.setVector(Arrays.copyOfRange(elements, position, position + caluloDeCarga));
+        work.setWorkType(aType);
+        work.setPosition(position);
+        return work;
+    }
 }
