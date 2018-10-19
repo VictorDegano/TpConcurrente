@@ -22,9 +22,9 @@ public class MapReducStrategy
     public void resolveJobTypeAndExecute(WorkTP aWorkTP)
     {
         if(this.isAReducerType(aWorkTP.getWorkType()))
-        {   this.reducStrategy.resolveJobTypeAndExecute(aWorkTP);    }
+            this.reducStrategy.resolveJobTypeAndExecute(aWorkTP);
         else
-        {   this.mapStrategy.resolveJobTypeAndExecute(aWorkTP); }
+            this.mapStrategy.resolveJobTypeAndExecute(aWorkTP);
     }
 
     private boolean isAReducerType(WorkType workType)

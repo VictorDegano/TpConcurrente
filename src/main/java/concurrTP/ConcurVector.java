@@ -68,8 +68,11 @@ public class ConcurVector extends SeqVector{
      * @param v, el vector con los valores a sumar.
      * @precondition dimension() == v.dimension(). */
     public void add(SeqVector v) {
-        for (int i = 0; i < dimension(); ++i)
-            set(i, get(i) + v.get(i));
+        this.loadWork(this.caluloDeCarga, elements, WorkType.ADD, v.elements);
+
+        this.pool.jobFinished();
+
+        this.joinResults();
     }
 
 
@@ -78,15 +81,21 @@ public class ConcurVector extends SeqVector{
      * @param v, el vector con los valores a multiplicar.
      * @precondition dimension() == v.dimension(). */
     public void mul(SeqVector v) {
-        for (int i = 0; i < dimension(); ++i)
-            set(i, get(i) * v.get(i));
+        this.loadWork(this.caluloDeCarga, elements, WorkType.MUL, v.elements);
+
+        this.pool.jobFinished();
+
+        this.joinResults();
     }
 
 
     /** Obtiene el valor absoluto de cada elemento del vector. */
     public void abs() {
-        for (int i = 0; i < dimension(); ++i)
-            set(i, Math.abs(get(i)));
+        this.loadWork(this.caluloDeCarga, elements, WorkType.ABS);
+
+        this.pool.jobFinished();
+
+        this.joinResults();
     }
 
 

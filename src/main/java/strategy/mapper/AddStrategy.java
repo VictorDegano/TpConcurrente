@@ -8,7 +8,15 @@ public class AddStrategy implements JobTypeStrategy
 {
     @Override
     public void executeJob(WorkTP aWorkTP) {
+        double[] elements       = aWorkTP.getVector();
+        double[] assignVector   = aWorkTP.getHelperVector();
+        int position = aWorkTP.getPosition();
 
+        for (int i = 0; i < aWorkTP.workSize(); ++i)
+        {
+            elements[i] += assignVector[position + i];
+        }
+        aWorkTP.setResultVector(elements);
     }
 
     @Override
