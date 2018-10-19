@@ -1,23 +1,13 @@
 package strategy.mapper;
 
-import workTP.WorkTP;
+import strategy.MapStrategy;
 import workTP.WorkType;
-import strategy.JobTypeStrategy;
 
-public class SetStrategy implements JobTypeStrategy
+public class SetStrategy extends MapStrategy
 {
     @Override
-    public void executeJob(WorkTP aWorkTP)
-    {
-        double[] elements   = aWorkTP.getVector();
-        double d            = aWorkTP.getValue();
-
-        for (int i = 0; i < aWorkTP.workSize(); ++i)
-        {
-            elements[i] = d;
-            System.out.print("Set " + d + "en index " + i + "del WorkTP \n");
-        }
-        aWorkTP.setResultVector(elements);
+    protected void doOperation(int index) {
+        elements[index] = value;
     }
 
     @Override

@@ -1,19 +1,13 @@
 package strategy.reducer;
 
-import workTP.WorkTP;
+import strategy.ReduceStrategy;
 import workTP.WorkType;
-import strategy.JobTypeStrategy;
 
-public class SumStrategy implements JobTypeStrategy
+public class SumStrategy extends ReduceStrategy
 {
     @Override
-    public void executeJob(WorkTP aWorkTP)
-    {
-        double result = 0;
-        for (int i = 0; i < aWorkTP.workSize(); ++i)
-            result += aWorkTP.getVector()[i];
-
-        aWorkTP.setResultValue(result);
+    protected void doOperation(int index) {
+        result += work.getVector()[index];
     }
 
     @Override

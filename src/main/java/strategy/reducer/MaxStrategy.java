@@ -1,13 +1,12 @@
 package strategy.reducer;
 
-import workTP.WorkTP;
+import strategy.ReduceStrategy;
 import workTP.WorkType;
-import strategy.JobTypeStrategy;
 
-public class MaxStrategy implements JobTypeStrategy
+public class MaxStrategy extends ReduceStrategy
 {
     @Override
-    public void executeJob(WorkTP aWorkTP) {
+    protected void doOperation(int index) {
 
     }
 

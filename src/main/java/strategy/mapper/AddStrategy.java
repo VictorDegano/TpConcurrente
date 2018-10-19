@@ -1,22 +1,13 @@
 package strategy.mapper;
 
-import workTP.WorkTP;
+import strategy.MapStrategy;
 import workTP.WorkType;
-import strategy.JobTypeStrategy;
 
-public class AddStrategy implements JobTypeStrategy
+public class AddStrategy extends MapStrategy
 {
     @Override
-    public void executeJob(WorkTP aWorkTP) {
-        double[] elements       = aWorkTP.getVector();
-        double[] assignVector   = aWorkTP.getHelperVector();
-        int position = aWorkTP.getPosition();
-
-        for (int i = 0; i < aWorkTP.workSize(); ++i)
-        {
-            elements[i] += assignVector[position + i];
-        }
-        aWorkTP.setResultVector(elements);
+    protected void doOperation(int index) {
+        this.elements[index] += this.helperVector[position + index];
     }
 
     @Override
