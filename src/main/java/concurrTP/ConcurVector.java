@@ -104,32 +104,14 @@ public class ConcurVector extends SeqVector{
     /** Obtiene la suma de todos los valores del vector. */
     public double sum()
     {
-        // TODO: 18/10/2018 tener en cuenta la diferencia de carga
         this.loadWork(this.caluloDeCarga, this.elements, WorkType.SUM);
         this.pool.jobFinished();
-
-        List<WorkTP> partialResult = this.resultBuffer.getResults();
-
-        if (partialResult.size() != 1)
-        {
-            double[]    algo = new double[partialResult.size()];
-            this.pool.updatePool(algo, this.caluloDeCarga);
-            //llamada recursiva aca
-            for (int i = 0; i < partialResult.size() ; i++)
-            {   algo[i] = partialResult.get(i).getResultValue();}
-            this.loadWork(caluloDeCarga, algo, WorkType.SUM);
-            this.pool.jobFinished();
-            partialResult = this.resultBuffer.getResults();
-        }
-
-        return partialResult.get(0).getResultValue();
+        return this.reviewResultAndWorkIt(WorkType.SUM);
     }
-
-
-
 
     /** Obtiene el valor promedio en el vector. */
     public double mean() {
+        // TODO: 20/10/2018 no es necesario un strategy para mean
         double total = sum();
         return total / dimension();
     }
@@ -140,8 +122,10 @@ public class ConcurVector extends SeqVector{
      * de cada coordenada.
      * @param v, el vector a usar para realizar el producto.
      * @precondition dimension() == v.dimension(). */
-    public double prod(SeqVector v) {
-        SeqVector aux = new SeqVector(dimension());
+    public double prod(SeqVector v)
+    {
+        // TODO: 20/10/2018 no es necesario un strategy para prod
+        ConcurVector aux = new ConcurVector(dimension(), this.pool.getThreads(), this.pool.getLoad());
         aux.assign(this);
         aux.mul(v);
         return aux.sum();
@@ -153,7 +137,8 @@ public class ConcurVector extends SeqVector{
      *  suma de los cuadrados de sus coordenadas.
      */
     public double norm() {
-        SeqVector aux = new SeqVector(dimension());
+        // TODO: 20/10/2018 Es necesario usar un strategy para solo hacer la raiz?
+        ConcurVector aux = new ConcurVector(dimension(), this.pool.getThreads(), this.pool.getLoad());
         aux.assign(this);
         aux.mul(this);
         return Math.sqrt(aux.sum());
@@ -161,11 +146,11 @@ public class ConcurVector extends SeqVector{
 
 
     /** Obtiene el valor maximo en el vector. */
-    public double max() {
-        double current_max = get(0);
-        for (int i = 0; i < dimension(); ++i)
-            current_max = Math.max(current_max, get(i));
-        return current_max;
+    public double max()
+    {
+        this.loadWork(this.caluloDeCarga, this.elements, WorkType.MAX);
+        this.pool.jobFinished();
+        return this.reviewResultAndWorkIt(WorkType.MAX);
     }
 
 
@@ -219,5 +204,21 @@ public class ConcurVector extends SeqVector{
         work.setWorkType(aType);
         work.setPosition(position);
         return work;
+    }
+
+    private double reviewResultAndWorkIt(WorkType aWorkType) {
+        List<WorkTP> partialResult = this.resultBuffer.getResults();
+
+        if (partialResult.size() != 1)
+        {
+            double[]    algo = new double[partialResult.size()];
+            this.pool.updatePool(algo, this.caluloDeCarga);
+            for (int i = 0; i < partialResult.size() ; i++)
+            {   algo[i] = partialResult.get(i).getResultValue();}
+            this.loadWork(caluloDeCarga, algo, aWorkType);
+            this.pool.jobFinished();
+            partialResult = this.resultBuffer.getResults();
+        }
+        return partialResult.get(0).getResultValue();
     }
 }
