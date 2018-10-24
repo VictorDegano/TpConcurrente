@@ -111,7 +111,6 @@ public class ConcurVector extends SeqVector{
 
     /** Obtiene el valor promedio en el vector. */
     public double mean() {
-        // TODO: 20/10/2018 no es necesario un strategy para mean
         double total = sum();
         return total / dimension();
     }
@@ -124,7 +123,6 @@ public class ConcurVector extends SeqVector{
      * @precondition dimension() == v.dimension(). */
     public double prod(SeqVector v)
     {
-        // TODO: 20/10/2018 no es necesario un strategy para prod
         ConcurVector aux = new ConcurVector(dimension(), this.pool.getThreads(), this.pool.getLoad());
         aux.assign(this);
         aux.mul(v);
@@ -137,7 +135,6 @@ public class ConcurVector extends SeqVector{
      *  suma de los cuadrados de sus coordenadas.
      */
     public double norm() {
-        // TODO: 20/10/2018 Es necesario usar un strategy para solo hacer la raiz?
         ConcurVector aux = new ConcurVector(dimension(), this.pool.getThreads(), this.pool.getLoad());
         aux.assign(this);
         aux.mul(this);

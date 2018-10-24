@@ -29,7 +29,7 @@ public class MapReducStrategy
 
     private boolean isAReducerType(WorkType workType)
     {
-        List<WorkType> reducerType  = Arrays.asList(WorkType.SUM, WorkType.MEAN, WorkType.PROD, WorkType.NORM, WorkType.MAX);
+        List<WorkType> reducerType  = Arrays.asList(WorkType.SUM, WorkType.MAX);
         return reducerType.contains(workType);
     }
 
