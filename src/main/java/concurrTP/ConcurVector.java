@@ -153,6 +153,8 @@ public class ConcurVector extends SeqVector{
 
 
     private void loadWork(int caluloDeCarga, double[] elements, WorkType aType) {
+        Double works = Math.ceil(Double.valueOf(elements.length)/Double.valueOf(caluloDeCarga));
+        this.pool.setNewWorks(works.intValue());
         for (int i = 0; i < elements.length; i += caluloDeCarga) {
             WorkTP work = getBasicWork(caluloDeCarga, elements, aType, i);
             this.buffer.push(work);
@@ -160,6 +162,8 @@ public class ConcurVector extends SeqVector{
     }
 
     private void loadWork(int caluloDeCarga, double[] elements, WorkType aType, double value) {
+        Double works = Math.ceil(Double.valueOf(elements.length)/Double.valueOf(caluloDeCarga));
+        this.pool.setNewWorks(works.intValue());
         for (int i = 0; i < elements.length; i += caluloDeCarga) {
             WorkTP work = getBasicWork(caluloDeCarga, elements, aType, i);
             work.setValue(value);
@@ -168,6 +172,8 @@ public class ConcurVector extends SeqVector{
     }
 
     private void loadWork(int caluloDeCarga, double[] elements, WorkType aType, double[] otherVector) {
+        Double works = Math.ceil(Double.valueOf(elements.length)/Double.valueOf(caluloDeCarga));
+        this.pool.setNewWorks(works.intValue());
         for (int i = 0; i < elements.length; i += caluloDeCarga) {
             WorkTP work = getBasicWork(caluloDeCarga, elements, aType, i);
             work.setHelperVector(otherVector);
@@ -177,6 +183,8 @@ public class ConcurVector extends SeqVector{
 
 
     private void loadWork(int caluloDeCarga, double[] elements, WorkType aType, double[] otherVector, double[] maskVector) {
+        Double works = Math.ceil(Double.valueOf(elements.length)/Double.valueOf(caluloDeCarga));
+        this.pool.setNewWorks(works.intValue());
         for (int i = 0; i < elements.length; i += caluloDeCarga) {
             WorkTP work = getBasicWork(caluloDeCarga, elements, aType, i);
             work.setHelperVector(otherVector);
@@ -209,7 +217,6 @@ public class ConcurVector extends SeqVector{
         if (partialResult.size() != 1)
         {
             double[]    algo = new double[partialResult.size()];
-            this.pool.updatePool(algo, this.caluloDeCarga);
             for (int i = 0; i < partialResult.size() ; i++)
             {   algo[i] = partialResult.get(i).getResultValue();}
             this.loadWork(caluloDeCarga, algo, aWorkType);
