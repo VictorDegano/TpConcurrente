@@ -26,10 +26,10 @@ public class Worker extends Thread
         while (true)
         {
             WorkTP workToDo = buffer.pop();         //Toma Trabajo
+            this.finishedJobMonitor.workerWorking();
             this.mapReducStrategy.resolveJobTypeAndExecute(workToDo);  //Discrimina que tipo de trabajo es y lo resuelve
             this.resultBuffer.add(workToDo);       //Guarda el trabajo resuelto
-            if (buffer.isEmpty())
-            {   this.finishedJobMonitor.workCompleted();    }
+            this.finishedJobMonitor.workCompleted();
         }
     }
 }
